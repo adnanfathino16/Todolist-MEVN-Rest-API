@@ -1,3 +1,3 @@
 module.exports = {
-  url: "mongodb://127.0.0.1:27017/collect_restapi",
+  url: "mongodb+srv://mern-vercel:fuyYoMalNzKjYFNM@cluster0.ddoahki.mongodb.net/?retryWrites=true&w=majority",
 };
