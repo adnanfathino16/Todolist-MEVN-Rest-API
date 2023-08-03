@@ -13,17 +13,31 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
+  const { title, body, published } = req.body;
+
+  const duplicate = await Post.findOne({ title: title });
+
+  if (duplicate) {
+    return res.status(400).json({
+      success: false,
+      message: "title sudah ada",
+    });
+  }
+
   const post = new Post({
-    title: req.body.title,
-    body: req.body.body,
-    published: req.body.published ? req.body.published : false,
+    title: title,
+    body: body,
+    published: published ? published : false,
   });
 
-  post
+  await post
     .save(post)
     .then((result) => {
-      res.send(result);
+      res.status(200).json({
+        result,
+        message: "post berhasil ditambahkan",
+      });
     })
     .catch((err) => {
       res.status(409).send({
@@ -51,12 +65,6 @@ exports.update = (req, res) => {
 
   Post.findByIdAndUpdate(id, req.body)
     .then((result) => {
-      if (!result) {
-        res.status(404).send({
-          message: "Post not found",
-        });
-      }
-
       res.send({
         message: "Post has updated",
       });
